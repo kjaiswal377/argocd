@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: ApplicationSet-test
+  name: applicationset-test
   namespace: argocd
 spec:
   generators:
@@ -9,22 +9,26 @@ spec:
       elements:
       - env: main
         cluster: dev-0
-        name: https://kubernetes.default.svc
+        name: in-cluster
       - env: stg
         cluster: stg-0
-        name: https://kubernetes.default.svc
+        name: in-cluster
   template:
     metadata:
-      name: 'ApplicationSet-test-{{env}}'
+      name: 'application-test-{{env}}'
     spec:
-      project: ApplicationSet
+      project: default
       source:
         repoURL: 'https://github.com/kjaiswal377/argocd.git'
         path: dev
+        targetRevision: '{{env}}'
       destination:
         name: '{{name}}'
         namespace: '{{env}}'
       syncPolicy:
         syncOptions:
         - CreateNamespace=true
-        automated: {}
+        automated:
+          selfHeal: true
+          prune: true
+        
