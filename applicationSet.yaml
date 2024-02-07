@@ -13,6 +13,9 @@ spec:
       - env: stg
         cluster: stg-0
         name: in-cluster
+      - env: prod
+        cluster: stg-0
+        name: in-cluster
   template:
     metadata:
       name: 'application-test-{{env}}'
