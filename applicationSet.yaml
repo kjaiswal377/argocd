@@ -7,12 +7,12 @@ spec:
   generators:
   - list:
       elements:
-      - env: dev
-        cluster: phenom-dev-0
-        name: phenom-dev-0-k8s
+      - env: main
+        cluster: dev-0
+        name: https://kubernetes.default.svc
       - env: stg
-        cluster: phenom-qa1
-        name: phenom-qa1-k8s
+        cluster: stg-0
+        name: https://kubernetes.default.svc
   template:
     metadata:
       name: 'ApplicationSet-test-{{env}}'
@@ -20,17 +20,11 @@ spec:
       project: ApplicationSet
       source:
         repoURL: 'https://github.com/kjaiswal377/argocd.git'
-        path: 
-        targetRevision: '{{env}}'
-        helm:
-          releaseName: employee-search
-          valueFiles:
-            - values.yaml
-          parameters:
-            - name: nameOverride
-              value: employee-search
+        path: dev
       destination:
         name: '{{name}}'
-        namespace: spx-search
+        namespace: '{{env}}'
       syncPolicy:
+        syncOptions:
+        - CreateNamespace=true
         automated: {}
